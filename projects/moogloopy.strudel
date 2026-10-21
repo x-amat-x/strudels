@@ -1,0 +1,73 @@
+// Prebake script
+const ratchet = register('ratchet', (pat) => pat.sometimes(ply(2)))
+
+setcpm(100/4)
+// setScale("G:minor")
+register('acidenv', (x,pat) =>pat.lpf(100)
+        .lpenv(x * 9).lps(0.1).lpd(.1).lpq(2)
+        )
+// sbd
+// rolandtr808_bd
+$kick: s("rolandtr808_bd!4").n(13)
+  .diode("1.5:.4").dist("1.2:.5")
+  .duck("2:4").duckdepth(.8).dec(.3)
+  .acidenv(slider(0.364))
+  .lpf(1500)
+  .clip(0.25)
+  .o(1)._scope()
+
+$moogloop: s("moogloop-100bpm").n(1).clip(1)
+  .diode("4:.4")
+  .lpq(7).lps(.5).hps("4/4").unison(4).dist("3.5:.5")
+  .hpf(1000)
+  .lpf(1200)
+  .acidenv(slider(0.886))
+  .o(2)
+  .postgain(0.65)
+  ._scope()
+
+$bass: s("[wt_digital_bad_day:2,supersaw]!16")
+        .wt(.3).wtenv(.4).unison(2).dec(.216).diode("8:.6").dist("5:.5")
+        .fm(time.mod("<1 _ _ 2>"))
+        // .note("C#2")
+        .n(("<7 _ _ 6 5 _ <5 3> <6 4>>*2")).scale("c#:minor").transpose(-24)
+        .acidenv(slider(0.741))
+        .lpf(900)
+        // .room(0.1)
+        .postgain(0.375)
+        .o(3)._scope()
+
+_$randos: n(irand(8).segment(2)).scale("C#:minor")
+  .ribbon(1337, 2).acidenv(slider(0.491))
+  .lpq(7).lps(.5).unison(4).dist("12.5:.5").diode("2.5:.9")
+  .duck("1:4").duckdepth(.9)
+  .o(4).s("supersaw").postgain(0.45)._scope()
+
+$lead: n("<0 4 <0 4 0 <6 0>> <0 7 0 9> <0 2 0 7>>*16".add("<7 _ _ 6 5 _ _ 6>*2")).scale("C#:minor")
+  .trans(0)
+  .o(5)
+  .s("z_sine")
+  .delay(.6)
+  // .room(0.3)
+  .pan(rand)
+  .fm(.5)
+  .fmwave('white')
+  .lpq(7).lps(.5).unison(4).dist("6.5:.45").diode("2.5:.8")
+  .acidenv(slider(0.545))
+  .postgain(.35)
+  ._pianoroll()
+
+$: s("white!16").dec(tri.fast(4).mul(.22))
+  .o(6)
+  .postgain(0.8)
+  ._scope()
+
+all(x => x.mul(postgain(.4)))
+
+// $TOP: s("top:5").ifit(1).scrub("0!4").o(2).gain(1.6)
+
+// $BREAK: s("jbreak:6").ifit(2).o(5).scrub("0!4").diode("2:.7").dly(.5).rlpf(slider(0.9)).o(3)
+
+// $BASS: n("<0>".sub(14)).segment(16).scale("G:minor").s("supersaw")
+// .delay(slider(.1)).acidenv(slider(.9)).diode(1).tgate(.4,2,.5)
+// .o(4).lpd(.1).lps(.1)._scope()
